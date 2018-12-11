@@ -1,0 +1,25 @@
+*next in line
+*join linked list?
+main context at init
+running global
+
+change in running and global list
+
+join ska in i ready kön..
+
+join på zombie...
+
+thread->join->next->next->next->null (join-lista)
+------------------------------------------------------------------
+condition variable is a pointer.
+condition variable->thread->next->next->next->null (condition list)
+on condition signal, move first element in cv list to ready list.
+on condition wait, suspend running thread because condition is not met
+------------------------------------------------------------------
+Roll your own & context assignment copy paste
+
+timer interrupt when yielding :(
+
+block interrupts when yielding... but timers have to be running for other contexts..
+------------------------------------------------------------------
+mutex....

@@ -1,0 +1,1 @@
+cmd_/home/taoudi/Assignments/lkm/hal.ko := ld -r -m elf_x86_64 -z max-page-size=0x200000 -T ./scripts/module-common.lds --build-id  -o /home/taoudi/Assignments/lkm/hal.ko /home/taoudi/Assignments/lkm/hal.o /home/taoudi/Assignments/lkm/hal.mod.o ;  true

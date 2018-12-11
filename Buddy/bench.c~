@@ -1,0 +1,87 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <math.h>
+#include <time.h>
+#include <sys/time.h>
+#include "buddy.h"
+
+#define ROUNDS 1
+#define LOOPS 1010000
+#define BUFFER 1010000
+#define MIN 1
+#define PAGE_SIZE 4072
+
+
+
+void randinit(){
+  time_t t;
+  srand(t);
+}
+int request() {
+  /* k is log(MAX/MIN) */
+  double k = log(((double) PAGE_SIZE )/ MIN);
+  /* r is [0..k[ */
+  double r = ((double)( rand() % (int)(k*10000))) / 10000;
+  /* size is [0 .. MAX[ */
+  int size = (int)((double)PAGE_SIZE / exp(r));
+  //printf("SIZE: %d \n", size);
+  return size;
+}
+/**
+int request(){
+  int size = rand()%(PAGE_SIZE);
+  return size;
+}
+**/
+
+
+
+void printB(int* address){
+printf("ADDRESS: %p \n",address);
+}
+
+
+int main(){
+  randinit();
+
+   void *buffer[BUFFER];
+   for(int i =0; i < BUFFER; i++) {
+     buffer[i] = NULL;
+   }
+
+   for(int j = 0; j < ROUNDS; j++) {
+     clock_t start = clock();
+     for(int i= 0; i < LOOPS ; i++) {
+       int index = rand() % BUFFER;
+       if(buffer[index] != NULL) {
+ 	     //  bfree(buffer[index]);
+       }
+       size_t size = (size_t)request();
+       int *memory;
+       memory = balloc(size);
+
+       if(memory == NULL) {
+ 	       memory = balloc(0);
+ 	       return(1);
+       }
+       buffer[index] = memory;
+       /* writing to the memory so we know it exists */
+      *memory = 123;
+     }
+
+     // Execuatable code
+     clock_t stop = clock();
+
+     int count = 0;
+     for(int i =0; i<BUFFER;i++){
+       if(buffer[i]!=NULL){
+       count++;
+      }
+     }
+
+     printf("Elements in buffer: %d----------",count);
+     double elapsed = (double)(stop - start)*1000 / CLOCKS_PER_SEC;
+     printf("Time elapsed in ms: %f\n", elapsed);
+ }
+}
