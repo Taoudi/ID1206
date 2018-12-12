@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "green.h"
 #define THREADS 4
-#define MAX 100000
+#define MAX 1000000
 int flag = 0;
 green_cond_t cond;
 green_mutex_t mutex;
@@ -42,7 +42,7 @@ void *test_cond(void *arg){
   while(loop>0){
     if(flag==id){
     count++;
-    printf(" count: %d\n",count);
+    printf(" count: %d,%d\n",count,id);
     loop--;
     flag = (id+1)%THREADS;
     green_cond_signal(&cond);
@@ -55,9 +55,9 @@ void *test_cond(void *arg){
 
 void *test_mutex(void *arg){
   green_mutex_lock(&mutex);
-while(1){
+  while(1){
     printf("runnin as thread: %d\n",*(int*)arg);
-  if(flag == 0){
+    if(flag == 0){
     flag=1;
     green_cond_signal(&cond);
     green_mutex_unlock(&mutex);
@@ -78,10 +78,10 @@ int main(){
   int a2 = 2;
   int a3 = 3;
   int a4 = 4;
-  green_create(&g0,test_mutex,&a0);
-  green_create(&g1,test_mutex,&a1);
-  green_create(&g2,test_mutex,&a2);
-  green_create(&g3,test_mutex,&a3);
+  green_create(&g0,test_cond,&a0);
+  green_create(&g1,test_cond,&a1);
+  green_create(&g2,test_cond,&a2);
+  green_create(&g3,test_cond,&a3);
 //  green_create(&g4,infinity,&a4);
 
   green_join(&g0);

@@ -2,9 +2,10 @@
 #include <ucontext.h>
 #include <assert.h>
 #include <stdio.h>
-#include "green.h"
+#include "green_atomic.h"
 #include <signal.h>
 #include <sys/time.h>
+
 #define PERIOD 100
 #define FALSE 0
 #define TRUE 1
@@ -48,7 +49,7 @@ void init(){
 
 void printlist(green_t *list){
 	while(list!=NULL){
-		printf("block: %p->", list);
+		printf("%p->", list);
 		list=list->next;
 	}
 	printf("NULL;");
@@ -120,7 +121,6 @@ int green_mutex_init(green_mutex_t *mutex){
 
 int green_mutex_lock(green_mutex_t *mutex){
 	sigprocmask(SIG_BLOCK,&block,NULL);
-
 	green_t *susp = running;
 	while(mutex->taken){
 		susp_enqueue(susp,mutex);
@@ -242,11 +242,16 @@ void green_cond_init(green_cond_t* cond){
 
 void green_cond_wait(green_cond_t* cond, green_mutex_t *mutex){
 	sigprocmask(SIG_BLOCK,&block,NULL);
+//	printf("mutexlist:");printlist(mutex->suspend);
+
 	green_t *susp = running;
 	cond_enqueue(susp,cond);
+//  printf("queue:"); printlist(mutex->suspend);
+
 	if(mutex!=NULL){
 		mutex->taken = FALSE;
 		enqueue(susp_dequeue(mutex));
+	//	printlist(queue);
 	}
 	green_t *next = dequeue();
 	running = next;
@@ -254,6 +259,7 @@ void green_cond_wait(green_cond_t* cond, green_mutex_t *mutex){
 
 	if(mutex != NULL){
 		while(mutex->taken){
+			susp->next = NULL;
 			susp_enqueue(susp,mutex);
 			green_t *next = dequeue();
 			running = next;
@@ -268,5 +274,4 @@ void green_cond_signal(green_cond_t* cond){
 	sigprocmask(SIG_BLOCK,&block,NULL);
 	enqueue(cond_dequeue(cond));
 	sigprocmask(SIG_UNBLOCK,&block,NULL);
-
 }
