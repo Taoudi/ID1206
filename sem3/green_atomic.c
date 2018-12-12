@@ -2,7 +2,7 @@
 #include <ucontext.h>
 #include <assert.h>
 #include <stdio.h>
-#include "green.h"
+#include "green_atomic.h"
 #include <signal.h>
 #include <sys/time.h>
 #define PERIOD 100
