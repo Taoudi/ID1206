@@ -54,14 +54,16 @@ void *test_cond(void *arg){
 }
 
 void *test_mutex(void *arg){
-  green_mutex_lock(&mutex);
+
 while(1){
-    printf("runnin as thread: %d\n",*(int*)arg);
-  if(flag == 0){
-    flag=1;
+    green_mutex_lock(&mutex);
+  int id= *(int*)arg;
+  if(flag ==id){
+printf("runnin as thread: %d\n",*(int*)arg);
+
+    flag++;
     green_cond_signal(&cond);
     green_mutex_unlock(&mutex);
-    break;
   }else {
     green_mutex_unlock(&mutex);
     green_cond_wait(&cond);
