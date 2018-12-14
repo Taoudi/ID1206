@@ -241,13 +241,8 @@ int externalFragmentation() {
 
 void test(){
 
-/**
-printf("size of head is: %ld\n", sizeof(struct head));
-  printf("level for  7 should be 0 : %d\n", level(7));
-  printf("level for  8 should be 0 : %d\n", level(8));
-  printf("level for  9 should be 1 : %d\n", level(9));
-  printf("level for  20 should be 1 : %d\n", level(20));
-  printf("level for  40 should be 1 : %d\n", level(40));
-printf("level for  41 should be 2 : %d\n", level(41));
-**/
+	int *allocated = balloc(2000);
+	int *allocated2 = balloc(1000);
+	bfree(allocated);
+	printf("amount: %d\n", externalFragmentation());
 }
