@@ -61,9 +61,9 @@ void *test_mutex(void *arg){
     printf("runnin as thread: %d\n",*(int*)arg);
     if(flag == id){
     flag=1;
+
     green_cond_signal(&cond);
     green_mutex_unlock(&mutex);
-    break;
   }else {
     green_mutex_unlock(&mutex);
     green_cond_wait(&cond);
