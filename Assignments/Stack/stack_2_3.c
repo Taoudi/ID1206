@@ -12,15 +12,19 @@ void zot(unsigned long *stop){
 }
 
 
-void foo(unsigned long *stop){
+
+void foo(unsigned long *stop,int one, int two, int three, int four,int five
+		,int six,int seven, int eight, int nine){
 	unsigned long q = 0x2;
 	zot(stop);
 }
 
 int main(){
+
 	int pid=getpid();
+	printf("%d\n", pid);
 	unsigned long p=0x1;
-	foo(&p);
+	foo(&p,1,2,3,4,5,6,7,8,9);
 
 	back:
 		printf(" p: %p \n", &p);
@@ -33,4 +37,3 @@ int main(){
 	return 0;
 
 }
-

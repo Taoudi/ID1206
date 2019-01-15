@@ -9,16 +9,18 @@ int main(){
 int pid = fork();
 if(pid==0){
 	printf("check the status\n");
-	sleep(10);
+	sleep(2);
 	printf("and again\n");
+	sleep(5);
 	return 42;
 }else{
-	sleep(20);
+	sleep(1);
 	int res;
+	printf("paretn waiting\n");
 	wait(&res);
 	printf("The result was %d\n", WEXITSTATUS(res));
 	printf("and again\n");
-	sleep(10);
+	sleep(1);
 }
 return 0;
 }

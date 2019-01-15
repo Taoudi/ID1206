@@ -14,7 +14,7 @@ int main(){
 		dup2(fd,1);
 		close(fd);
 		execl("boba","boba",NULL);
-		printf("ON FAIL");
+		printf("ON FAIL eller vad jag nu vill skriva :)");
 	}
 	else{
 		wait(NULL);

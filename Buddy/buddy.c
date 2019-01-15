@@ -240,9 +240,11 @@ int externalFragmentation() {
 }
 
 void test(){
+  struct head* h1 = balloc(3000);
+  struct head* h2 =balloc(3000);
+  bfree(h1);
+  bfree(h2);
+    printf("Amount of free: %d \n", externalFragmentation());
+  printf("total: %d", getTotal());
 
-	int *allocated = balloc(2000);
-	int *allocated2 = balloc(1000);
-	bfree(allocated);
-	printf("amount: %d\n", externalFragmentation());
 }

@@ -91,6 +91,10 @@ green_t* dequeue(){
 	return next;
 }
 
+void recall(){
+	sigprocmask(SIG_UNBLOCK,&block,NULL);
+}
+
 void susp_enqueue(green_t *node,green_mutex_t *list){
 	if(list->suspend == NULL){
 		list->suspend = node;
@@ -153,7 +157,6 @@ void green_thread(){
 	running = next;
 	setcontext(next->context);
 	sigprocmask(SIG_UNBLOCK,&block,NULL);
-
 }
 
 int green_create(green_t *new, void *(*fun)(void*), void*arg){
@@ -175,16 +178,22 @@ int green_create(green_t *new, void *(*fun)(void*), void*arg){
 }
 
 int green_yield(){
+	sigprocmask(SIG_BLOCK,&block,NULL);
+
 	green_t *susp = running;
 	enqueue(susp);
 	green_t *next = dequeue();
 	running = next;
 	swapcontext(susp->context, next->context);
+	sigprocmask(SIG_UNBLOCK,&block,NULL);
+
 	return 0;
 }
 
 
 int green_join(green_t *thread){
+	sigprocmask(SIG_BLOCK,&block,NULL);
+
 		if(thread->zombie)
 		return 0;
 	 green_t *susp = running;
@@ -192,6 +201,8 @@ int green_join(green_t *thread){
 	green_t *next = dequeue();
 	running = next;
 	swapcontext(susp->context,next->context);
+	sigprocmask(SIG_UNBLOCK,&block,NULL);
+
 	return 0;
 }
 

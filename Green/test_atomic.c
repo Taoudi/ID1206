@@ -63,18 +63,15 @@ void *test_cond(void *arg){
 
 void *test_mutex(void *arg){
   green_mutex_lock(&mutex);
-  int loop =100;
   int id= *(int*)arg;
   while(1){
-    //loop--;
     printf("we runnin as thread: %d\n", *(int*)arg);
-
-    if(flag == 0){
+    //loop--;
+    if(flag == id%THREADS){
 	   //printf("we runnin as thread: %d\n", *(int*)arg);
-      flag = (id+1)%THREADS;
+      flag++;
       green_cond_signal(&cond);
       green_mutex_unlock(&mutex);
-      break;
     }else {
       //green_cond_signal(&cond);
       green_cond_wait(&cond,&mutex);
@@ -91,17 +88,18 @@ void *test_consumer(void *arg){
      if(flag%2==CONSUMER){
        printf("Consumed!, %d\n",flag);
       flag++;
-      if(flag!=1){
-      green_cond_signal(&cond);
-    }
-    //  pthread_cond_signal(&pcond1);
+
+      pthread_cond_signal(&pcond1);
      }
       printf("consumer sleep\n" );
-    green_cond_wait(&cond2,&mutex);
+      //green_cond_signal(&cond);
+      green_cond_wait(&cond2,&mutex);
     //pthread_mutex_unlock(&lock);
   //  pthread_cond_wait(&pcond2,&lock);
     }
 }
+
+
 void *test_producer(void *arg){
   int id = *(int*)arg;
     while(1){
@@ -111,9 +109,7 @@ void *test_producer(void *arg){
       printf("Produced!,%d\n",flag);
       flag++;
       //pthread_cond_signal(&pcond2);
-      if(flag!=0){
       green_cond_signal(&cond2);
-    }
       }
       printf("producer sleep\n" );
       green_cond_wait(&cond,&mutex);
@@ -140,14 +136,14 @@ int main(){
 //  pthread_create(&b1,NULL,test_producer,&a1);
 flag=PRODUCER;
 
-  green_create(&g1,test_producer,&a1);
- green_create(&g0,test_consumer,&a0);
+ green_create(&g1,test_mutex,&a1);
+ green_create(&g0,test_mutex,&a0);
 //  green_create(&g2,test_mutex,&a2);
 //  green_create(&g3,test_mutex,&a3);
 //  green_create(&g4,infinity,&a4);
 
   green_join(&g0);
- green_join(&g1);
+  green_join(&g1);
 
 //  green_join(&g2);
 //  green_join(&g3);
