@@ -45,9 +45,10 @@ void *test_cond(void *arg){
     printf(" count: %d,%d\n",count,id);
     loop--;
     flag = (id+1)%THREADS;
-    green_cond_signal(&cond);
   }
   else{
+    green_cond_signal(&cond);
+
     green_cond_wait(&cond);
   }
   }
@@ -55,13 +56,14 @@ void *test_cond(void *arg){
 
 void *test_mutex(void *arg){
   green_mutex_lock(&mutex);
+  int id= *(int*)arg;
   while(1){
     printf("runnin as thread: %d\n",*(int*)arg);
-    if(flag == 0){
+    if(flag == id){
     flag=1;
+
     green_cond_signal(&cond);
     green_mutex_unlock(&mutex);
-    break;
   }else {
     green_mutex_unlock(&mutex);
     green_cond_wait(&cond);
@@ -78,10 +80,10 @@ int main(){
   int a2 = 2;
   int a3 = 3;
   int a4 = 4;
-  green_create(&g0,test_cond,&a0);
-  green_create(&g1,test_cond,&a1);
-  green_create(&g2,test_cond,&a2);
-  green_create(&g3,test_cond,&a3);
+  green_create(&g0,test_mutex,&a0);
+  green_create(&g1,test_mutex,&a1);
+  green_create(&g2,test_mutex,&a2);
+  green_create(&g3,test_mutex,&a3);
 //  green_create(&g4,infinity,&a4);
 
   green_join(&g0);

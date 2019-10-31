@@ -6,9 +6,9 @@
 #include <sys/time.h>
 #include "buddy.h"
 
-#define ROUNDS 8
-#define LOOPS 100000
-#define BUFFER 20000
+#define ROUNDS 10
+#define LOOPS 1000
+#define BUFFER 100
 #define MIN 1
 #define PAGE_SIZE 4072
 
@@ -110,6 +110,7 @@ void speed(){
   printf("Elements in buffer: %d----------",count);
      **/
  }
+
 }
 
 
@@ -122,16 +123,17 @@ void memory(){
   for(int i =0; i < BUFFER; i++) {
     buffer[i] = NULL;
   }
+
  double  start = clock();
   for(int j = 0; j < ROUNDS; j++) {
     for(int i= 0; i < LOOPS; i++) {
       int index = rand() % BUFFER;
       if(buffer[index] != NULL) {
-	free(buffer[index]);
+	         bfree(buffer[index]);
       }
       size_t size = (size_t)request();
       int *memory;
-      memory = malloc(size);
+      memory = balloc(size);
 
       if(memory == NULL) {
 	memory = balloc(0);
@@ -142,13 +144,20 @@ void memory(){
       buffer[index] = memory;
       /* writing to the memory so we know it exists */
       // *memory = 123;
-            printf("%d\t%d\t%d\t%d \n", (int)(((double) (clock() - start)*1000*1000) / CLOCKS_PER_SEC),getTotal(), externalFragmentation(), getTotal()-externalFragmentation());
+      //      printf("%d\t%d\t%d\t%d \n", (int)(((double) (clock() - start)*1000*1000) / CLOCKS_PER_SEC),getTotal(), externalFragmentation(), getTotal()-externalFragmentation());
     }
+    printf("total size: %d\t", getTotal());
+    printf("Free: %d\n", externalFragmentation());
   }
+
+
+
 }
 
 int main(){
-  randinit();
-  speed();
-  //memory();
+  //randinit();
+ // speed();
+//memory();
+test();
+
 }

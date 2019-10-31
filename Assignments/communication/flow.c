@@ -4,7 +4,7 @@
 #include <assert.h>
 #include <sys/wait.h>
 
-#define ITERATIONS 10
+#define ITERATIONS 100
 #define BURST 100000
 
 

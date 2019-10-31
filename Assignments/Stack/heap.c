@@ -15,7 +15,7 @@ int main(){
 
 
 		/* danger ahead*/
-		char command[50];
+		//char command[50];
 		*heap = 0x63;
 		printf("or is it pointing to: 0x%x\n",*foo);
 

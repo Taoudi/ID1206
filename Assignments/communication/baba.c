@@ -21,6 +21,7 @@ int main() {
       int buffer[10];
       read(pipe, &buffer, 10);
     }
+    printf("consumer read\n");
     sleep(1);
   }
   printf("consumer done\n");

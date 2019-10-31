@@ -2,21 +2,19 @@
 #include <unistd.h>
 
 int main(){
-	int x=123;
+//	int x=123;
 	int pid=fork();
 	
-	if(pid == 0){
-	printf("child: x is  %d\n", x);
-	x=42;
+if(pid == 0){
+	printf("child is  %d\n", pid);
 	sleep(1);
-	printf(" child: x is %d\n",x);
-	}
-	else{
-	printf(" mother: x is %d\n", x);
-	x=13;
-	sleep(1);
-	printf(" mother: x is %d\n",x);
-	wait(NULL);
-	}	
+}
+else{
+	//printf(" my child is called: x is %d\n", pid);
+	int res;
+	wait(&res);
+	printf("result was: ", WEXITSATUS(res));
+}
+//	printf("done %d\n", pid);
 	return 0;
 }
